@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PenguinMod project library</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="./data.js"></script>
+    <script>
+        function copy(text) {
+            const copyContent = async () => {
+                try {
+                await navigator.clipboard.writeText(text);
+                console.log('Content copied to clipboard');
+                } catch (err) {
+                console.error('Failed to copy: ', err);
+                }
+            }
+        }
+        function open(url) {
+            window.open(url,'_blank')
+        }
+        $(document).ready(function () {
+            for (const key in data) {
+                if (Object.hasOwnProperty.call(data, key)) {
+                    const proj = data[key];
+                    if(!proj["accepted"]){
+                        $(("unaccepted")).append(`<div class="project">\
+                        <name><a href="https://studio.penguinmod.site/#${proj["id"]}" target="_blank">${proj["name"]}</a></name>\
+                            <info>${proj["id"]}</info>\
+                            <div class="proj-controls">\
+                                <button onclick="copy('${proj["id"]}')">Copy id</button>\
+                                <a href="https://studio.penguinmod.site/#${proj["id"]}" target="_blank"><button>Open</button></a>\
+                            </div>\
+                        </div>`);
+                    }
+                }
+            }
+            const url = 'https://projects.penguinmod.site/api/projects/getApproved';
+
+            $.getJSON(url, function(data) {
+                var approvedData = data
+                console.log(approvedData);
+                for (const key in approvedData) {
+                    if (Object.hasOwnProperty.call(data, key)) {
+                        const proj = data[key];
+                        $(("accepted")).append(`<div class="project">\
+                        <name><a href="https://studio.penguinmod.site/#${proj["id"]}" target="_blank">${proj["name"]}</a></name>\
+                            <info>${proj["id"]}</info>\
+                            <div class="proj-controls">\
+                                <button onclick="copy('${proj["id"]}')">Copy id</button>\
+                                <a href="https://studio.penguinmod.site/#${proj["id"]}" target="_blank"><button>Open</button></a>\
+                            </div>\
+                        </div>`);
+                    }
+                }
+            })
+            $(`#${"2023-06-03"}`).text(`${new Date("2023-06-03").toDateString()}`)
+        });
+    </script>
+</head>
+
+<body>
+    <projects>
+        <h1>accepted</h1>
+        <accepted>
+
+        </accepted>
+
+        <h1>unaccepted</h1>
+        <unaccepted>
+            this info is for <span id="2023-06-03"></span>
+
+        </unaccepted>
+    </projects>
+</body>
+
+<style>
+    body {
+        background: #e8e8e8;
+        margin: 0;
+    }
+    .project {
+        background: #e1e1e1;
+        border: black 4px solid;
+        border-radius: 10px;
+        margin-block: 1px;
+        padding: 2.5px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .project:hover {
+        background: #f3f3f3;
+    }
+    .project info {
+        position: absolute;
+        left: 50%;
+    }
+    .proj-controls button:hover {
+        cursor: pointer;
+    }
+</style>
+
+</html>
